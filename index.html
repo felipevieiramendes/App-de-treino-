@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu Treino</title>
+<meta name="theme-color" content="#070d10">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Meu Treino">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png">
+
+<style>
+:root{--bg:#070d10;--card:#121c20;--card2:#1b282d;--tx:#eef5f2;--mu:#8a9a9f;--ac:#52f23c;--dn:#ff6b5e;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+*{box-sizing:border-box}
+body{margin:0 auto;background:radial-gradient(120% 40% at 50% 0,#0f2a2c 0,var(--bg) 70%) no-repeat,var(--bg);color:var(--tx);font:16px Barlow,system-ui,sans-serif;max-width:480px;min-height:100vh;padding:20px 18px 110px}
+h1,h2,h3,.cd{font-family:'Barlow Condensed',system-ui,sans-serif;font-weight:700;margin:0}
+h1{font-size:34px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+button{font:inherit;cursor:pointer;border:0;color:var(--tx);background:var(--card2);border-radius:14px;padding:10px 16px}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.p{background:var(--ac);color:#04150a;font-weight:700}
+.g{background:var(--card2)}
+.dn{color:var(--dn)}
+.ic{width:42px;height:42px;padding:0;border-radius:50%;font-size:20px}
+.card{background:var(--card);border-radius:24px;padding:18px;margin-bottom:14px}
+.card h2{font-size:26px}
+.mu{color:var(--mu);font-size:15px}
+.cr{display:flex;justify-content:space-between;align-items:flex-end;margin-top:26px}
+.start{background:#0b1316;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;padding:12px 34px;border-radius:30px}
+.ex{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #1f2d32}
+.ex:last-of-type{border-bottom:0}
+.ex>div:first-child{flex:1;min-width:0}
+.ex b{font-size:18px;font-weight:500}
+.chips{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.chip{width:36px;height:36px;border-radius:50%;padding:0;background:var(--card2);color:var(--mu);font-weight:700}
+.chip.on{background:var(--ac);color:#04150a}
+.add{width:100%;background:transparent;border:1.5px dashed #2b3d43;color:var(--ac);padding:14px;margin-top:8px}
+.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(444px,calc(100% - 24px));display:flex;background:#0f181c;border:1px solid #243339;border-radius:30px;padding:6px;z-index:5}
+.tabs button{flex:1;background:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;border-radius:24px;color:var(--mu)}
+.tabs button.on{background:var(--card2);color:var(--ac)}
+.ov{position:fixed;inset:0;background:#000a;display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sh{background:#121c20;width:100%;max-width:480px;border-radius:26px 26px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom,0px))}
+.fl{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+label{flex:1 1 100%;display:block;color:var(--mu);font-size:14px}
+label.s{flex:1 1 28%}
+input{width:100%;margin-top:5px;background:#0b1316;border:1px solid #2b3d43;border-radius:12px;color:var(--tx);font:inherit;font-size:17px;padding:11px 12px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row .p{margin-left:auto}
+.ring{display:block;margin:10px auto 18px}
+.btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.btns button{padding:16px 0;font-weight:700}
+.big{font-family:'Barlow Condensed',sans-serif;font-weight:700}
+.wr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #1f2d32}
+.empty{color:var(--mu);text-align:center;padding:30px 10px}
+.bots{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 20px}.bt{width:36px;height:68px;border:2px solid #2b3d43;border-radius:10px;position:relative;overflow:hidden;background:#0b1316}.bt i{position:absolute;left:0;right:0;bottom:0;background:var(--ac);display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.st{background:var(--card2);border-radius:16px;padding:12px 14px}.st b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:28px}
+.bar{height:10px;border-radius:6px;background:var(--card2);overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac)}
+.sx{display:flex;gap:8px;margin-top:12px}.sx button{flex:1}.sx .on{background:var(--ac);color:#04150a;font-weight:700}
+.rb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));width:min(444px,calc(100% - 24px));display:flex;align-items:center;justify-content:space-between;gap:10px;background:#16261c;border:1.5px solid var(--ac);border-radius:22px;padding:10px 14px;z-index:6}.rb .row{flex-wrap:nowrap}.rb button{padding:8px 12px}
+@media (prefers-reduced-motion:no-preference){.ov{animation:f .15s}@keyframes f{from{opacity:0}}}
+</style></head><body>
+<div id="app"></div>
+<nav class="tabs" id="nav"></nav>
+<script>
+const K='meutreino.v1',uid=()=>Math.random().toString(36).slice(2,9),
+today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},
+esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
+E=(n,k)=>({id:uid(),name:n,sets:4,reps:10,kg:k});
+let S=null;
+try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
+if(!S)S={w:[
+{id:uid(),name:'Inferiores A',ex:[E('Agachamento livre',45),E('Cadeira extensora',69),E('Leg press 45',160),E('Panturrilha sentado',20)]},
+{id:uid(),name:'Inferiores B',ex:[E('Cadeira flexora',49),E('Stiff com barra',35),E('Elevação pélvica máquina',72),E('Panturrilha sentado',20)]},
+{id:uid(),name:'Superiores A',ex:[]}],goal:3000,water:{},weights:[],dn:{d:'',c:{}}};
+let DB=null,UID=null,tm=null;
+const push=async()=>{try{if(DB&&navigator.onLine!==false)await DB.doc('app').set({json:JSON.stringify(S)})}catch(e){}};
+const save=()=>{S.ts=Date.now();try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}if(DB){clearTimeout(tm);tm=setTimeout(push,400)}};
+let tab='t',open=null;
+const W=()=>S.w.find(w=>w.id===open);
+if(S.dn.d!==today())S.dn={d:today(),c:{}};
+
+function sheet(title,fields,onSave,extra=[]){
+ const d=document.createElement('div');d.className='ov';
+ d.innerHTML=`<div class="sh" role="dialog" aria-label="${esc(title)}"><h3>${esc(title)}</h3><div class="fl">${fields.map(f=>`<label class="${f.s?'s':''}">${f.l}<input id="f_${f.k}" type="${f.t||'text'}" ${f.t==='number'?'inputmode="decimal" step="any"':''} value="${esc(f.v)}"></label>`).join('')}</div><div class="row">${extra.map((x,i)=>`<button class="g ${x.c||''}" data-x="${i}">${x.l}</button>`).join('')}<button class="p" id="ok">Salvar</button></div></div>`;
+ d.onclick=e=>{if(e.target===d)d.remove()};
+ document.body.appendChild(d);
+ const get=()=>Object.fromEntries(fields.map(f=>[f.k,d.querySelector('#f_'+f.k).value.trim()]));
+ d.querySelector('#ok').onclick=()=>{onSave(get());d.remove();save();R()};
+ d.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{extra[b.dataset.x].f();d.remove();save();R()});
+ const i=d.querySelector('input');if(i)i.focus();
+}
+const num=(v,def)=>{const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?def:n};
+
+function newWorkout(){sheet('Novo treino',[{k:'n',l:'Nome do treino (ex: Superiores A)'}],v=>{if(v.n){const w={id:uid(),name:v.n,ex:[]};S.w.push(w);open=w.id}})}
+function wMenu(){const w=W();sheet('Treino',[{k:'n',l:'Nome do treino',v:w.name}],v=>{if(v.n)w.name=v.n},
+ [{l:'Duplicar',f:()=>{S.w.push({id:uid(),name:w.name+' (cópia)',ex:w.ex.map(e=>({...e,id:uid()}))})}},
+  {l:'Excluir',c:'dn',f:()=>{S.w=S.w.filter(x=>x!==w);open=null}}])}
+function exSheet(e){const w=W(),isNew=!e;e=e||{name:'',sets:3,reps:10,kg:''};
+ const i=w.ex.indexOf(e),mv=d=>{const j=i+d;if(j>=0&&j<w.ex.length)[w.ex[i],w.ex[j]]=[w.ex[j],w.ex[i]]};
+ sheet(isNew?'Novo exercício':'Editar exercício',[{k:'name',l:'Exercício',v:e.name},{k:'sets',l:'Séries',t:'number',v:e.sets,s:1},{k:'reps',l:'Repetições',t:'number',v:e.reps,s:1},{k:'kg',l:'Peso (kg)',t:'number',v:e.kg,s:1}],
+ v=>{if(!v.name)return;const o={name:v.name,sets:Math.max(1,num(v.sets,3)|0),reps:Math.max(1,num(v.reps,10)|0),kg:num(v.kg,0)};
+  if(isNew)w.ex.push({id:uid(),...o});else Object.assign(e,o)},
+ isNew?[]:[{l:'↑',f:()=>mv(-1)},{l:'↓',f:()=>mv(1)},{l:'Excluir',c:'dn',f:()=>{w.ex.splice(i,1)}}])}
+function tapSet(id,n){const c=S.dn.c[id]||0;S.dn.c[id]=c===n+1?n:n+1;save();R()}
+
+function home(){
+ return `<div class="top"><h1>Meus treinos</h1><button class="p" onclick="newWorkout()">+ Novo</button></div>`+
+ (S.w.length?S.w.map(w=>`<div class="card"><h2>${esc(w.name)}</h2><div class="mu">${w.ex.length} exercícios${w.ex.length?' • '+estTxt(w):''}</div><div class="cr"><span class="mu">${w.ex.slice(0,2).map(e=>esc(e.name)).join(', ')||'Sem exercícios ainda'}</span><button class="start" onclick="go('${w.id}')">INICIAR</button></div></div>`).join(''):'<div class="empty">Nenhum treino criado. Toque em Novo para começar.</div>');
+}
+function detail(){
+ const w=W();let tot=0,dn=0;w.ex.forEach(e=>{tot+=e.sets;dn+=Math.min(S.dn.c[e.id]||0,e.sets)});
+ return `<div class="top"><button class="ic" onclick="go(null)" aria-label="Voltar">‹</button><h1 style="flex:1">${esc(w.name)}</h1><button class="ic" onclick="wMenu()" aria-label="Opções">⋯</button></div>
+ <div class="mu" style="margin:-8px 0 12px">${tot?`${dn} de ${tot} séries feitas hoje`:'Adicione o primeiro exercício'}</div>
+ <div class="card" style="padding:6px 18px">${w.ex.map(e=>`<div class="ex"><div><b>${esc(e.name)}</b><div class="mu">${e.sets} séries • ${e.reps} reps • ${e.kg}kg</div><div class="chips">${Array.from({length:e.sets},(_,i)=>`<button class="chip ${(S.dn.c[e.id]||0)>i?'on':''}" onclick="tapSet('${e.id}',${i})" aria-label="Série ${i+1}">${i+1}</button>`).join('')}</div></div><button class="ic" onclick="exSheet(W().ex.find(x=>x.id==='${e.id}'))" aria-label="Editar">⋮</button></div>`).join('')||'<div class="empty">Nenhum exercício neste treino.</div>'}</div>
+ <button class="add" onclick="exSheet()">+ Adicionar exercício</button>
+ ${tot?`<button class="g" style="width:100%;margin-top:10px" onclick="S.dn.c={};save();R()">Zerar séries de hoje</button>`:''}`;
+}
+function water(){
+ const t=S.water[today()]||0,p=Math.min(1,t/S.goal),r=84,c=2*Math.PI*r;
+ return `<div class="top"><h1>Água</h1><button class="g" onclick="goal()">Meta: ${(S.goal/1000).toFixed(1).replace('.',',')} L</button></div>
+ <svg class="ring" width="220" height="220" viewBox="0 0 220 220" role="img" aria-label="${t} de ${S.goal} ml"><circle cx="110" cy="110" r="${r}" fill="none" stroke="#1b282d" stroke-width="16"/><circle cx="110" cy="110" r="${r}" fill="none" stroke="var(--ac)" stroke-width="16" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 110 110)"/><text x="110" y="112" text-anchor="middle" class="big" font-size="46" fill="#eef5f2">${t}</text><text x="110" y="140" text-anchor="middle" fill="#8a9a9f" font-size="15">de ${S.goal} ml</text></svg>
+ <div class="btns">${[200,300,500].map(n=>`<button class="p" onclick="addW(${n})">+${n} ml</button>`).join('')}</div>
+ <button class="g" style="width:100%;margin-top:10px" onclick="addW(-200)">Desfazer 200 ml</button>
+ ${t>=S.goal?'<p class="mu" style="text-align:center">Meta de hoje batida.</p>':''}`;
+}
+function addW(n){const d=today();S.water[d]=Math.max(0,(S.water[d]||0)+n);save();R()}
+function goal(){sheet('Meta diária de água',[{k:'g',l:'Meta em ml',t:'number',v:S.goal}],v=>{S.goal=Math.max(500,num(v.g,S.goal)|0)})}
+function weight(){
+ const ws=S.weights,l=ws.slice(-14);let ch='';
+ if(l.length>1){const mn=Math.min(...l.map(x=>x.kg))-1,mx=Math.max(...l.map(x=>x.kg))+1,pts=l.map((x,i)=>`${10+i*(280/(l.length-1))},${90-(x.kg-mn)/(mx-mn)*80}`).join(' ');
+  ch=`<svg viewBox="0 0 300 100" width="100%" role="img" aria-label="Evolução do peso"><polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>`}
+ return `<div class="top"><h1>Peso</h1><button class="p" onclick="addWt()">+ Registrar</button></div>
+ <div class="card"><div class="big" style="font-size:44px">${ws.length?ws[ws.length-1].kg.toString().replace('.',','):'--'} <span class="mu">kg</span></div>${ws.length>1?`<div class="mu">${(ws[ws.length-1].kg-ws[0].kg>0?'+':'')+(ws[ws.length-1].kg-ws[0].kg).toFixed(1).replace('.',',')} kg desde o primeiro registro</div>`:''}${ch}</div>
+ ${ws.slice().reverse().slice(0,20).map(x=>`<div class="wr"><span>${x.d.split('-').reverse().join('/')}</span><b>${x.kg.toString().replace('.',',')} kg</b></div>`).join('')||'<div class="empty">Registre seu peso corporal para ver a evolução.</div>'}`;
+}
+S.weights.forEach(x=>{x.id=x.id||uid()});
+function addWt(){sheet('Novo registro de peso',[{k:'k',l:'Peso (kg)',t:'number'}],v=>{const k=num(v.k,0);if(k>0){const n=new Date();S.weights.push({id:uid(),d:today(),t:String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),kg:k})}})}
+function delWt(id){S.weights=S.weights.filter(x=>x.id!==id);save();R()}
+
+function R(){
+ document.getElementById('app').innerHTML=open&&W()?detail():(open=null,tab==='t'?home():tab==='a'?water():weight());
+ document.getElementById('nav').innerHTML=[['t','Treinos'],['a','Água'],['p','Eu']].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="nav('${k}')">${l}</button>`).join('');
+}
+S.bt=S.bt||900;S.gb=S.gb||3;S.me=S.me||{n:'',sx:'',a:'',h:'',m:''};
+const fmt=n=>String(n).replace('.',','),G=()=>S.bt*S.gb,ml=n=>n.toLocaleString('pt-BR');
+function water(){
+ const t=S.water[today()]||0,g=G(),p=Math.min(1,t/g),r=84,c=2*Math.PI*r;
+ const bots=Array.from({length:S.gb},(_,i)=>`<div class="bt"><i style="height:${Math.max(0,Math.min(1,(t-i*S.bt)/S.bt))*100}%"></i></div>`).join('');
+ return `<div class="top"><h1>Água</h1><button class="g" onclick="goal()">Meta: ${S.gb} × ${S.bt} ml</button></div>
+ <svg class="ring" width="220" height="220" viewBox="0 0 220 220" role="img" aria-label="${t} de ${g} ml"><circle cx="110" cy="110" r="${r}" fill="none" stroke="#1b282d" stroke-width="16"/><circle cx="110" cy="110" r="${r}" fill="none" stroke="var(--ac)" stroke-width="16" stroke-linecap="round" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 110 110)"/><text x="110" y="108" text-anchor="middle" class="big" font-size="46" fill="#eef5f2">${ml(t)}</text><text x="110" y="136" text-anchor="middle" fill="#8a9a9f" font-size="15">de ${ml(g)} ml</text></svg>
+ <p class="mu" style="text-align:center;margin:-6px 0 14px">${fmt(Math.round(t/S.bt*10)/10)} de ${S.gb} garrafas</p>
+ <div class="bots">${bots}</div>
+ <div class="g2"><button class="p" onclick="addW(${S.bt})">+1 garrafa</button><button class="g" onclick="addW(${S.bt/2})">+½ garrafa</button></div>
+ <button class="g" style="width:100%;margin-top:10px" onclick="addW(-${S.bt/2})">Desfazer ½ garrafa</button>
+ ${t>=g?'<p class="mu" style="text-align:center">Meta de hoje batida.</p>':''}${hist()}`;
+}
+function goal(){sheet('Meta de água',[{k:'b',l:'Tamanho da garrafa (ml)',t:'number',v:S.bt,s:1},{k:'g',l:'Garrafas por dia',t:'number',v:S.gb,s:1}],v=>{S.bt=Math.max(100,num(v.b,S.bt)|0);S.gb=Math.min(12,Math.max(1,num(v.g,S.gb)|0))})}
+function setSx(x){S.me.sx=x;save();R()}
+function editMe(){const m=S.me;sheet('Sobre mim',[{k:'n',l:'Nome',v:m.n},{k:'a',l:'Idade',t:'number',v:m.a,s:1},{k:'h',l:'Altura (cm)',t:'number',v:m.h,s:1},{k:'m',l:'Meta de peso (kg)',t:'number',v:m.m,s:1}],v=>{Object.assign(S.me,{n:v.n,a:v.a,h:v.h,m:v.m})})}
+function weight(){
+ const m=S.me,ws=S.weights,cur=ws.length?ws[ws.length-1].kg:0,first=ws.length?ws[0].kg:0,h=num(m.h,0),a=num(m.a,0),mt=num(m.m,0),l=ws.slice(-14);
+ const imc=cur&&h?cur/((h/100)**2):0,cls=imc<18.5?'Abaixo do peso':imc<25?'Peso normal':imc<30?'Sobrepeso':'Obesidade',
+ tmb=cur&&h&&a&&m.sx?Math.round(10*cur+6.25*h-5*a+(m.sx==='M'?5:-161)):0,
+ pct=mt&&first&&cur&&first!==mt?Math.max(0,Math.min(1,(first-cur)/(first-mt))):0;
+ let ch='';
+ if(l.length>1){const mn=Math.min(...l.map(x=>x.kg))-1,mx=Math.max(...l.map(x=>x.kg))+1,pts=l.map((x,i)=>`${10+i*(280/(l.length-1))},${90-(x.kg-mn)/(mx-mn)*80}`).join(' ');ch=(()=>{const k=l.map(x=>x.kg),hi=Math.max(...k),lw=Math.min(...k),lo=lw-((hi-lw)||1),w=280/l.length,bw=Math.min(30,w-6);return `<svg viewBox="0 0 300 130" width="100%" role="img" aria-label="Evolução do peso em colunas">${l.map((x,i)=>{const hh=12+(x.kg-lo)/(hi-lo)*78,cx=10+w*i+w/2;return `<rect x="${cx-bw/2}" y="${105-hh}" width="${bw}" height="${hh}" rx="4" fill="${i===l.length-1?'var(--ac)':'#2f4a3a'}"/><text x="${cx}" y="${100-hh}" text-anchor="middle" font-size="9" fill="#eef5f2">${fmt(x.kg)}</text><text x="${cx}" y="122" text-anchor="middle" font-size="8" fill="#8a9a9f">${x.d.slice(8)}/${x.d.slice(5,7)}</text>`}).join('')}</svg>`})()}
+ return `<div class="top"><h1>${m.n?'Olá, '+esc(m.n):'Sobre mim'}</h1><button class="g" onclick="editMe()">Editar</button></div>
+ <div class="card"><div class="mu">Sexo</div><div class="sx"><button class="${m.sx==='M'?'on':''}" onclick="setSx('M')">Masculino</button><button class="${m.sx==='F'?'on':''}" onclick="setSx('F')">Feminino</button></div>
+ <div class="g2" style="margin-top:14px"><div class="st"><span class="mu">Peso atual</span><b>${cur?fmt(cur)+' kg':'--'}</b></div><div class="st"><span class="mu">Meta de peso</span><b>${mt?fmt(mt)+' kg':'--'}</b></div><div class="st"><span class="mu">Altura</span><b>${h?h+' cm':'--'}</b></div><div class="st"><span class="mu">Idade</span><b>${a?a+' anos':'--'}</b></div></div>
+ ${mt&&cur?`<div class="bar" style="margin-top:16px"><i style="width:${pct*100}%"></i></div><div class="mu">${cur===mt?'Você chegou na meta.':'Faltam '+fmt(Math.abs(Math.round((cur-mt)*10)/10))+' kg para a meta'}</div>`:'<p class="mu">Defina sua meta em Editar.</p>'}</div>
+ ${imc||tmb?`<div class="card g2">${imc?`<div class="st"><span class="mu">IMC</span><b>${fmt(imc.toFixed(1))}</b><span class="mu">${cls}</span></div>`:''}${tmb?`<div class="st"><span class="mu">Metabolismo basal</span><b>${ml(tmb)} kcal</b></div>`:''}${cur?`<div class="st" style="grid-column:1/-1"><span class="mu">Sugestão de água (35 ml por kg)</span><b>${fmt(Math.round(cur*35/S.bt*10)/10)} garrafas por dia</b></div>`:''}</div>`:''}
+ <div class="top" style="margin-top:22px"><h2>Evolução do peso</h2><button class="p" onclick="addWt()">+ Registrar</button></div>
+ ${ch?`<div class="card">${ch}</div>`:''}
+ ${ws.slice().reverse().map(x=>`<div class="wr" style="align-items:center"><span>${x.d.split('-').reverse().join('/')}${x.t?' • '+x.t:''}</span><span><b>${fmt(x.kg)} kg</b><button class="ic dn" style="width:32px;height:32px;font-size:16px;margin-left:10px" onclick="delWt('${x.id}')" aria-label="Excluir registro">×</button></span></div>`).join('')||'<div class="empty">Registre seu peso para ver a evolução.</div>'}<div class="card" style="margin-top:22px"><h2>Backup</h2><p class="mu">Guarde uma cópia dos seus dados ou restaure em outro aparelho.</p><button class="g" onclick="backup()">Backup e restaurar</button></div>`;
+}
+function hist(){const g=G();let o='';for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()-i);const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),v=S.water[k]||0;o+=`<div style="margin-bottom:12px"><div class="wr" style="border:0;padding:0"><span>${i?k.slice(8)+'/'+k.slice(5,7):'Hoje'}</span><span class="mu">${fmt(Math.round(v/S.bt*10)/10)} garrafas • ${ml(v)} ml ${v>=g?'✓':''}</span></div><div class="bar"><i style="width:${Math.min(100,v/g*100)}%"></i></div></div>`}return `<h2 style="margin:26px 0 12px">Últimos 7 dias</h2><div class="card">${o}</div>`}
+function norm(){S.bt=S.bt||900;S.gb=S.gb||3;S.me=S.me||{n:'',sx:'',a:'',h:'',m:''};S.water=S.water||{};S.weights=S.weights||[];S.weights.forEach(x=>{x.id=x.id||uid()});if(!S.dn||S.dn.d!==today())S.dn={d:today(),c:{}}}
+let cd=today();
+function roll(){if(S.dn.d!==today()){S.dn={d:today(),c:{}};save()}if(cd!==today()){cd=today();R()}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(tm);push()}else roll()});
+addEventListener('focus',roll);setInterval(roll,30000);
+const RS=()=>S.rs||90,fm=ms=>{const s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s%60).padStart(2,'0')},el=a=>a?a.acc+(a.run?Date.now()-a.st:0):0;
+let rEnd=0;
+function est(w){let sec=0,vol=0,ld=0;w.ex.forEach(e=>{sec+=e.sets*e.reps*4+Math.max(0,e.sets-1)*RS()+45;vol+=e.sets*e.reps;ld+=e.sets*e.reps*(e.kg||0)});const min=Math.round(sec/60),ws=S.weights,bw=ws.length?ws[ws.length-1].kg:0,m=S.me,h=num(m.h,0),a=num(m.a,0),full=!!(h&&a&&m.sx);if(!w.ex.length||!bw)return{min,kcal:null,full};const I=Math.min(1,(ld/vol)/(bw*0.9)),met=3+3*I,tmb=full?10*bw+6.25*h-5*a+(m.sx==='M'?5:-161):bw*24;return{min,kcal:Math.round(met*tmb/24*(sec/3600)/5)*5,full}}
+function estTxt(w){const e=est(w);return '~'+e.min+'min'+(e.kcal!==null?' • ~'+e.kcal+'kcal':'')}
+function wStart(){S.wt={id:open,st:Date.now(),acc:0,run:true};save();R()}
+function wToggle(){const a=S.wt;if(a.run){a.acc+=Date.now()-a.st;a.run=false}else{a.st=Date.now();a.run=true}save();R()}
+function wEnd(){const t=el(S.wt);S.hist=S.hist||[];S.hist.push({d:today(),w:W().name,ms:t});S.wt=null;stopRest();save();R()}
+function timerCard(){const w=W(),a=S.wt&&S.wt.id===w.id?S.wt:null,last=(S.hist||[]).filter(h=>h.w===w.name).slice(-1)[0];
+ return `<div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="flex:1"><div class="mu">Tempo de treino${last?' • último: '+fm(last.ms):''}</div><div class="big" id="wt" style="font-size:36px">${fm(el(a))}</div></div>${!a?`<button class="p" onclick="wStart()">Começar</button>`:`<button class="g" onclick="wToggle()">${a.run?'Pausar':'Retomar'}</button><button class="p" onclick="wEnd()">Finalizar</button>`}</div><div class="mu" style="margin:-4px 0 12px"><button class="g" style="padding:6px 12px;font-size:14px" onclick="restSet()">Descanso: ${fm(RS()*1000)}</button> começa ao concluir cada série</div>${w.ex.length?(()=>{const e=est(w);return `<div class="card" style="padding:14px 18px;margin-top:-2px"><div class="mu">Estimativa deste treino</div><div class="big" style="font-size:28px">~${e.min} min${e.kcal!==null?' • ~'+e.kcal+' kcal':''}</div><div class="mu" style="font-size:13px;margin-top:4px">${e.kcal===null?'Registre seu peso na aba Eu para ver as calorias.':e.full?'Valor aproximado, baseado no seu peso, altura, idade, sexo e nas cargas usadas.':'Preencha sexo, altura e idade na aba Eu para uma estimativa mais precisa.'}</div></div>`})():''}`}
+const _d0=detail;detail=()=>_d0().replace('<div class="mu" style="margin:-8px 0 12px">',timerCard()+'<div class="mu" style="margin:-8px 0 12px">');
+function restSet(){sheet('Tempo de descanso',[{k:'m',l:'Minutos',t:'number',v:Math.floor(RS()/60),s:1},{k:'s',l:'Segundos',t:'number',v:RS()%60,s:1}],v=>{S.rs=Math.max(5,(num(v.m,0)|0)*60+(num(v.s,0)|0))})}
+function tapSet(id,n){const c=S.dn.c[id]||0,on=c!==n+1;S.dn.c[id]=on?n+1:n;if(on&&!S.wt)S.wt={id:open,st:Date.now(),acc:0,run:true};save();R();if(on)startRest()}
+function startRest(){rEnd=Date.now()+RS()*1000;rbar()}
+function stopRest(){rEnd=0;rbar()}
+function adjRest(s){rEnd=Math.max(Date.now(),rEnd)+s*1000;rbar()}
+function rbar(){let b=document.getElementById('rb');if(!rEnd){b&&b.remove();return}if(!b){b=document.createElement('div');b.id='rb';b.className='rb';document.body.appendChild(b)}b.innerHTML=`<div><div class="mu">Descanso</div><div class="big" id="rt" style="font-size:34px"></div></div><div class="row"><button class="g" onclick="adjRest(-15)">−15s</button><button class="g" onclick="adjRest(15)">+15s</button><button class="p" onclick="stopRest()">Pular</button></div>`;tick()}
+let beeped=0;
+function beep(){try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.15;o.start();o.stop(c.currentTime+.4)}catch(e){}}
+function tick(){const w=document.getElementById('wt');if(w&&S.wt&&S.wt.id===open)w.textContent=fm(el(S.wt));const b=document.getElementById('rb');if(rEnd&&b){b.style.display=open?'flex':'none';const left=rEnd-Date.now(),t=document.getElementById('rt');if(t)t.textContent=left>0?fm(left+999):'Pronto!';if(left<=0&&beeped!==rEnd){beeped=rEnd;beep()}if(left<-8000)stopRest()}}
+setInterval(tick,500);
+addEventListener('online',()=>push());
+function backup(){const d=document.createElement('div');d.className='ov';d.innerHTML=`<div class="sh"><h3>Backup</h3><p class="mu">Copie o texto abaixo e guarde (ex: no bloco de notas). Para restaurar, cole o texto aqui e toque em Restaurar.</p><textarea id="bk" style="width:100%;height:140px;background:#0b1316;color:#eef5f2;border:1px solid #2b3d43;border-radius:12px;padding:10px;font:12px monospace"></textarea><div class="row" style="margin-top:12px"><button class="g" id="cp">Copiar</button><button class="p" id="rs">Restaurar</button></div></div>`;d.onclick=e=>{if(e.target===d)d.remove()};document.body.appendChild(d);const t=d.querySelector('#bk');t.value=JSON.stringify(S);d.querySelector('#cp').onclick=()=>{t.select();try{navigator.clipboard.writeText(t.value)}catch(e){try{document.execCommand('copy')}catch(x){}}};d.querySelector('#rs').onclick=()=>{try{const r=JSON.parse(t.value);if(!r||!Array.isArray(r.w))throw 0;S=r;norm();save();d.remove();R()}catch(e){t.style.borderColor='#ff6b5e'}}}
+function go(id){open=id;R();tick();window.scrollTo(0,0)}
+function nav(k){tab=k;open=null;R();tick()}
+R();
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+
+</script></body></html>
