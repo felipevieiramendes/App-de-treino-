@@ -55,6 +55,8 @@ input{width:100%;margin-top:5px;background:#0b1316;border:1px solid #2b3d43;bord
 .bar{height:10px;border-radius:6px;background:var(--card2);overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac)}
 .sx{display:flex;gap:8px;margin-top:12px}.sx button{flex:1}.sx .on{background:var(--ac);color:#04150a;font-weight:700}
 .rb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));width:min(444px,calc(100% - 24px));display:flex;align-items:center;justify-content:space-between;gap:10px;background:#16261c;border:1.5px solid var(--ac);border-radius:22px;padding:10px 14px;z-index:6}.rb .row{flex-wrap:nowrap}.rb button{padding:8px 12px}
+.sc{display:flex;flex-direction:column;align-items:center;gap:4px}.ki{width:56px;margin:0;padding:6px 4px;text-align:center;font-size:15px}
+.ts{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));width:min(444px,calc(100% - 24px));display:none;background:var(--ac);color:#04150a;padding:12px 16px;border-radius:18px;z-index:30;font-weight:500}.ts .mu{color:#0b3a12}
 @media (prefers-reduced-motion:no-preference){.ov{animation:f .15s}@keyframes f{from{opacity:0}}}
 </style></head><body>
 <div id="app"></div>
@@ -90,26 +92,26 @@ function sheet(title,fields,onSave,extra=[]){
 const num=(v,def)=>{const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?def:n};
 
 function newWorkout(){sheet('Novo treino',[{k:'n',l:'Nome do treino (ex: Superiores A)'}],v=>{if(v.n){const w={id:uid(),name:v.n,ex:[]};S.w.push(w);open=w.id}})}
-function wMenu(){const w=W();sheet('Treino',[{k:'n',l:'Nome do treino',v:w.name}],v=>{if(v.n)w.name=v.n},
+function wMenu(id){const w=S.w.find(x=>x.id===(id||open));sheet('Treino',[{k:'n',l:'Nome do treino',v:w.name}],v=>{if(v.n)w.name=v.n},
  [{l:'Duplicar',f:()=>{S.w.push({id:uid(),name:w.name+' (cópia)',ex:w.ex.map(e=>({...e,id:uid()}))})}},
-  {l:'Excluir',c:'dn',f:()=>{S.w=S.w.filter(x=>x!==w);open=null}}])}
+  {l:'Excluir',c:'dn',f:()=>delW(w.id)}])}
 function exSheet(e){const w=W(),isNew=!e;e=e||{name:'',sets:3,reps:10,kg:''};
  const i=w.ex.indexOf(e),mv=d=>{const j=i+d;if(j>=0&&j<w.ex.length)[w.ex[i],w.ex[j]]=[w.ex[j],w.ex[i]]};
  sheet(isNew?'Novo exercício':'Editar exercício',[{k:'name',l:'Exercício',v:e.name},{k:'sets',l:'Séries',t:'number',v:e.sets,s:1},{k:'reps',l:'Repetições',t:'number',v:e.reps,s:1},{k:'kg',l:'Peso (kg)',t:'number',v:e.kg,s:1}],
  v=>{if(!v.name)return;const o={name:v.name,sets:Math.max(1,num(v.sets,3)|0),reps:Math.max(1,num(v.reps,10)|0),kg:num(v.kg,0)};
-  if(isNew)w.ex.push({id:uid(),...o});else Object.assign(e,o)},
+  if(isNew)w.ex.push({id:uid(),...o});else{if(o.kg!==num(e.kg,0))e.ks=null;Object.assign(e,o)}},
  isNew?[]:[{l:'↑',f:()=>mv(-1)},{l:'↓',f:()=>mv(1)},{l:'Excluir',c:'dn',f:()=>{w.ex.splice(i,1)}}])}
-function tapSet(id,n){const c=S.dn.c[id]||0;S.dn.c[id]=c===n+1?n:n+1;save();R()}
+function tapSet(id,n){unlock();const e=W().ex.find(x=>x.id===id),c=S.dn.c[id]||0,nc=c===n+1?n:n+1;S.dn.c[id]=nc;const adv=nc>c;if(adv){for(let i=c;i<nc;i++)checkPR(e,i);if(!S.wt)S.wt={id:open,st:Date.now(),acc:0,run:true}}save();R();if(adv)startRest()}
 
 function home(){
  return `<div class="top"><h1>Meus treinos</h1><button class="p" onclick="newWorkout()">+ Novo</button></div>`+
- (S.w.length?S.w.map(w=>`<div class="card"><h2>${esc(w.name)}</h2><div class="mu">${w.ex.length} exercícios${w.ex.length?' • '+estTxt(w):''}</div><div class="cr"><span class="mu">${w.ex.slice(0,2).map(e=>esc(e.name)).join(', ')||'Sem exercícios ainda'}</span><button class="start" onclick="go('${w.id}')">INICIAR</button></div></div>`).join(''):'<div class="empty">Nenhum treino criado. Toque em Novo para começar.</div>');
+ (S.w.length?S.w.map(w=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><h2>${esc(w.name)}</h2><button class="ic" onclick="wMenu('${w.id}')" aria-label="Opções do treino">⋯</button></div><div class="mu">${w.ex.length} exercícios${w.ex.length?' • '+estTxt(w):''}</div><div class="cr"><span class="mu">${w.ex.slice(0,2).map(e=>esc(e.name)).join(', ')||'Sem exercícios ainda'}</span><button class="start" onclick="go('${w.id}')">INICIAR</button></div></div>`).join(''):'<div class="empty">Nenhum treino criado. Toque em Novo para começar.</div>');
 }
 function detail(){
  const w=W();let tot=0,dn=0;w.ex.forEach(e=>{tot+=e.sets;dn+=Math.min(S.dn.c[e.id]||0,e.sets)});
  return `<div class="top"><button class="ic" onclick="go(null)" aria-label="Voltar">‹</button><h1 style="flex:1">${esc(w.name)}</h1><button class="ic" onclick="wMenu()" aria-label="Opções">⋯</button></div>
  <div class="mu" style="margin:-8px 0 12px">${tot?`${dn} de ${tot} séries feitas hoje`:'Adicione o primeiro exercício'}</div>
- <div class="card" style="padding:6px 18px">${w.ex.map(e=>`<div class="ex"><div><b>${esc(e.name)}</b><div class="mu">${e.sets} séries • ${e.reps} reps • ${e.kg}kg</div><div class="chips">${Array.from({length:e.sets},(_,i)=>`<button class="chip ${(S.dn.c[e.id]||0)>i?'on':''}" onclick="tapSet('${e.id}',${i})" aria-label="Série ${i+1}">${i+1}</button>`).join('')}</div></div><button class="ic" onclick="exSheet(W().ex.find(x=>x.id==='${e.id}'))" aria-label="Editar">⋮</button></div>`).join('')||'<div class="empty">Nenhum exercício neste treino.</div>'}</div>
+ <div class="card" style="padding:6px 18px">${w.ex.map(e=>`<div class="ex"><div><b>${esc(e.name)}</b><div class="mu">${e.sets} séries • ${e.reps} reps • ${kgTxt(e)}${S.pr&&S.pr[pk(e)]?' • recorde '+fmt(S.pr[pk(e)])+'kg':''}</div><div class="chips">${Array.from({length:e.sets},(_,i)=>`<div class="sc"><button class="chip ${(S.dn.c[e.id]||0)>i?'on':''}" onclick="tapSet('${e.id}',${i})" aria-label="Série ${i+1}">${i+1}</button><input class="ki" type="number" inputmode="decimal" step="any" value="${kgOf(e,i)}" onchange="setKg('${e.id}',${i},this.value)" aria-label="Peso da série ${i+1} em kg"></div>`).join('')}</div></div><button class="ic" onclick="exSheet(W().ex.find(x=>x.id==='${e.id}'))" aria-label="Editar">⋮</button></div>`).join('')||'<div class="empty">Nenhum exercício neste treino.</div>'}</div>
  <button class="add" onclick="exSheet()">+ Adicionar exercício</button>
  ${tot?`<button class="g" style="width:100%;margin-top:10px" onclick="S.dn.c={};save();R()">Zerar séries de hoje</button>`:''}`;
 }
@@ -150,7 +152,7 @@ function water(){
  <div class="bots">${bots}</div>
  <div class="g2"><button class="p" onclick="addW(${S.bt})">+1 garrafa</button><button class="g" onclick="addW(${S.bt/2})">+½ garrafa</button></div>
  <button class="g" style="width:100%;margin-top:10px" onclick="addW(-${S.bt/2})">Desfazer ½ garrafa</button>
- ${t>=g?'<p class="mu" style="text-align:center">Meta de hoje batida.</p>':''}${hist()}`;
+ ${t>=g?'<p class="mu" style="text-align:center">Meta de hoje batida.</p>':''}${sugBox()}${hist()}`;
 }
 function goal(){sheet('Meta de água',[{k:'b',l:'Tamanho da garrafa (ml)',t:'number',v:S.bt,s:1},{k:'g',l:'Garrafas por dia',t:'number',v:S.gb,s:1}],v=>{S.bt=Math.max(100,num(v.b,S.bt)|0);S.gb=Math.min(12,Math.max(1,num(v.g,S.gb)|0))})}
 function setSx(x){S.me.sx=x;save();R()}
@@ -166,7 +168,7 @@ function weight(){
  <div class="card"><div class="mu">Sexo</div><div class="sx"><button class="${m.sx==='M'?'on':''}" onclick="setSx('M')">Masculino</button><button class="${m.sx==='F'?'on':''}" onclick="setSx('F')">Feminino</button></div>
  <div class="g2" style="margin-top:14px"><div class="st"><span class="mu">Peso atual</span><b>${cur?fmt(cur)+' kg':'--'}</b></div><div class="st"><span class="mu">Meta de peso</span><b>${mt?fmt(mt)+' kg':'--'}</b></div><div class="st"><span class="mu">Altura</span><b>${h?h+' cm':'--'}</b></div><div class="st"><span class="mu">Idade</span><b>${a?a+' anos':'--'}</b></div></div>
  ${mt&&cur?`<div class="bar" style="margin-top:16px"><i style="width:${pct*100}%"></i></div><div class="mu">${cur===mt?'Você chegou na meta.':'Faltam '+fmt(Math.abs(Math.round((cur-mt)*10)/10))+' kg para a meta'}</div>`:'<p class="mu">Defina sua meta em Editar.</p>'}</div>
- ${imc||tmb?`<div class="card g2">${imc?`<div class="st"><span class="mu">IMC</span><b>${fmt(imc.toFixed(1))}</b><span class="mu">${cls}</span></div>`:''}${tmb?`<div class="st"><span class="mu">Metabolismo basal</span><b>${ml(tmb)} kcal</b></div>`:''}${cur?`<div class="st" style="grid-column:1/-1"><span class="mu">Sugestão de água (35 ml por kg)</span><b>${fmt(Math.round(cur*35/S.bt*10)/10)} garrafas por dia</b></div>`:''}</div>`:''}
+ ${imc||tmb?`<div class="card g2">${imc?`<div class="st"><span class="mu">IMC</span><b>${fmt(imc.toFixed(1))}</b><span class="mu">${cls}</span></div>`:''}${tmb?`<div class="st"><span class="mu">Metabolismo basal</span><b>${ml(tmb)} kcal</b></div>`:''}${cur?`<div class="st" style="grid-column:1/-1"><span class="mu">Sugestão de água (35 ml por kg)</span><b>${fmt(Math.round(cur*35/S.bt*10)/10)} garrafas por dia</b><button class="p" style="margin-top:8px" onclick="useSug()">Usar como minha meta de água</button></div>`:''}</div>`:''}
  <div class="top" style="margin-top:22px"><h2>Evolução do peso</h2><button class="p" onclick="addWt()">+ Registrar</button></div>
  ${ch?`<div class="card">${ch}</div>`:''}
  ${ws.slice().reverse().map(x=>`<div class="wr" style="align-items:center"><span>${x.d.split('-').reverse().join('/')}${x.t?' • '+x.t:''}</span><span><b>${fmt(x.kg)} kg</b><button class="ic dn" style="width:32px;height:32px;font-size:16px;margin-left:10px" onclick="delWt('${x.id}')" aria-label="Excluir registro">×</button></span></div>`).join('')||'<div class="empty">Registre seu peso para ver a evolução.</div>'}<div class="card" style="margin-top:22px"><h2>Backup</h2><p class="mu">Guarde uma cópia dos seus dados ou restaure em outro aparelho.</p><button class="g" onclick="backup()">Backup e restaurar</button></div>`;
@@ -179,26 +181,39 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeo
 addEventListener('focus',roll);setInterval(roll,30000);
 const RS=()=>S.rs||90,fm=ms=>{const s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s%60).padStart(2,'0')},el=a=>a?a.acc+(a.run?Date.now()-a.st:0):0;
 let rEnd=0;
-function est(w){let sec=0,vol=0,ld=0;w.ex.forEach(e=>{sec+=e.sets*e.reps*4+Math.max(0,e.sets-1)*RS()+45;vol+=e.sets*e.reps;ld+=e.sets*e.reps*(e.kg||0)});const min=Math.round(sec/60),ws=S.weights,bw=ws.length?ws[ws.length-1].kg:0,m=S.me,h=num(m.h,0),a=num(m.a,0),full=!!(h&&a&&m.sx);if(!w.ex.length||!bw)return{min,kcal:null,full};const I=Math.min(1,(ld/vol)/(bw*0.9)),met=3+3*I,tmb=full?10*bw+6.25*h-5*a+(m.sx==='M'?5:-161):bw*24;return{min,kcal:Math.round(met*tmb/24*(sec/3600)/5)*5,full}}
+function est(w){let sec=0,vol=0,ld=0;w.ex.forEach(e=>{sec+=e.sets*e.reps*4+Math.max(0,e.sets-1)*RS()+45;vol+=e.sets*e.reps;for(let i=0;i<e.sets;i++)ld+=e.reps*num(kgOf(e,i),0)});const min=Math.round(sec/60),ws=S.weights,bw=ws.length?ws[ws.length-1].kg:0,m=S.me,h=num(m.h,0),a=num(m.a,0),full=!!(h&&a&&m.sx);if(!w.ex.length||!bw)return{min,kcal:null,full};const I=Math.min(1,(ld/vol)/(bw*0.9)),met=3+3*I,tmb=full?10*bw+6.25*h-5*a+(m.sx==='M'?5:-161):bw*24;return{min,kcal:Math.round(met*tmb/24*(sec/3600)/5)*5,full}}
 function estTxt(w){const e=est(w);return '~'+e.min+'min'+(e.kcal!==null?' • ~'+e.kcal+'kcal':'')}
 function wStart(){S.wt={id:open,st:Date.now(),acc:0,run:true};save();R()}
 function wToggle(){const a=S.wt;if(a.run){a.acc+=Date.now()-a.st;a.run=false}else{a.st=Date.now();a.run=true}save();R()}
 function wEnd(){const t=el(S.wt);S.hist=S.hist||[];S.hist.push({d:today(),w:W().name,ms:t});S.wt=null;stopRest();save();R()}
 function timerCard(){const w=W(),a=S.wt&&S.wt.id===w.id?S.wt:null,last=(S.hist||[]).filter(h=>h.w===w.name).slice(-1)[0];
- return `<div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="flex:1"><div class="mu">Tempo de treino${last?' • último: '+fm(last.ms):''}</div><div class="big" id="wt" style="font-size:36px">${fm(el(a))}</div></div>${!a?`<button class="p" onclick="wStart()">Começar</button>`:`<button class="g" onclick="wToggle()">${a.run?'Pausar':'Retomar'}</button><button class="p" onclick="wEnd()">Finalizar</button>`}</div><div class="mu" style="margin:-4px 0 12px"><button class="g" style="padding:6px 12px;font-size:14px" onclick="restSet()">Descanso: ${fm(RS()*1000)}</button> começa ao concluir cada série</div>${w.ex.length?(()=>{const e=est(w);return `<div class="card" style="padding:14px 18px;margin-top:-2px"><div class="mu">Estimativa deste treino</div><div class="big" style="font-size:28px">~${e.min} min${e.kcal!==null?' • ~'+e.kcal+' kcal':''}</div><div class="mu" style="font-size:13px;margin-top:4px">${e.kcal===null?'Registre seu peso na aba Eu para ver as calorias.':e.full?'Valor aproximado, baseado no seu peso, altura, idade, sexo e nas cargas usadas.':'Preencha sexo, altura e idade na aba Eu para uma estimativa mais precisa.'}</div></div>`})():''}`}
+ return `<div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="flex:1"><div class="mu">Tempo de treino${last?' • último: '+fm(last.ms):''}</div><div class="big" id="wt" style="font-size:36px">${fm(el(a))}</div></div>${!a?`<button class="p" onclick="wStart()">Começar</button>`:`<button class="g" onclick="wToggle()">${a.run?'Pausar':'Retomar'}</button><button class="p" onclick="wEnd()">Finalizar</button>`}</div><div class="mu" style="margin:-4px 0 12px"><button class="g" style="padding:6px 12px;font-size:14px" onclick="restSet()">Descanso: ${fm(RS()*1000)}</button> <button class="g" style="padding:6px 12px;font-size:14px" onclick="beep()">Testar som</button></div>${w.ex.length?(()=>{const e=est(w);return `<div class="card" style="padding:14px 18px;margin-top:-2px"><div class="mu">Estimativa deste treino</div><div class="big" style="font-size:28px">~${e.min} min${e.kcal!==null?' • ~'+e.kcal+' kcal':''}</div><div class="mu" style="font-size:13px;margin-top:4px">${e.kcal===null?'Registre seu peso na aba Eu para ver as calorias.':e.full?'Valor aproximado, baseado no seu peso, altura, idade, sexo e nas cargas usadas.':'Preencha sexo, altura e idade na aba Eu para uma estimativa mais precisa.'}</div></div>`})():''}`}
 const _d0=detail;detail=()=>_d0().replace('<div class="mu" style="margin:-8px 0 12px">',timerCard()+'<div class="mu" style="margin:-8px 0 12px">');
 function restSet(){sheet('Tempo de descanso',[{k:'m',l:'Minutos',t:'number',v:Math.floor(RS()/60),s:1},{k:'s',l:'Segundos',t:'number',v:RS()%60,s:1}],v=>{S.rs=Math.max(5,(num(v.m,0)|0)*60+(num(v.s,0)|0))})}
-function tapSet(id,n){const c=S.dn.c[id]||0,on=c!==n+1;S.dn.c[id]=on?n+1:n;if(on&&!S.wt)S.wt={id:open,st:Date.now(),acc:0,run:true};save();R();if(on)startRest()}
 function startRest(){rEnd=Date.now()+RS()*1000;rbar()}
 function stopRest(){rEnd=0;rbar()}
 function adjRest(s){rEnd=Math.max(Date.now(),rEnd)+s*1000;rbar()}
 function rbar(){let b=document.getElementById('rb');if(!rEnd){b&&b.remove();return}if(!b){b=document.createElement('div');b.id='rb';b.className='rb';document.body.appendChild(b)}b.innerHTML=`<div><div class="mu">Descanso</div><div class="big" id="rt" style="font-size:34px"></div></div><div class="row"><button class="g" onclick="adjRest(-15)">−15s</button><button class="g" onclick="adjRest(15)">+15s</button><button class="p" onclick="stopRest()">Pular</button></div>`;tick()}
 let beeped=0;
-function beep(){try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.15;o.start();o.stop(c.currentTime+.4)}catch(e){}}
+let AC=null;
+function unlock(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){}}
+function tone(f,t,d,g,ty){if(!AC)return;const o=AC.createOscillator(),v=AC.createGain(),a=AC.currentTime+t;o.type=ty||'sine';o.frequency.value=f;o.connect(v);v.connect(AC.destination);v.gain.setValueAtTime(0.0001,a);v.gain.exponentialRampToValueAtTime(g,a+.02);v.gain.exponentialRampToValueAtTime(0.0001,a+d);o.start(a);o.stop(a+d+.05)}
+function chime(){unlock();[523,659,784,1047].forEach((f,i)=>tone(f,i*.12,.4,.3))}
+function beep(){unlock();try{navigator.vibrate&&navigator.vibrate([300,120,300,120,500])}catch(e){}[880,880,880,1175].forEach((f,i)=>tone(f,i*.28,.22,.35,'square'))}
+addEventListener('pointerdown',unlock,{passive:true});
+const kgOf=(e,i)=>e.ks&&e.ks[i]!=null?e.ks[i]:e.kg,pk=e=>e.name.trim().toLowerCase();
+function kgTxt(e){const a=Array.from({length:e.sets},(_,i)=>num(kgOf(e,i),0)),mn=Math.min(...a),mx=Math.max(...a);return mn===mx?fmt(mx)+'kg':fmt(mn)+'–'+fmt(mx)+'kg'}
+function setKg(id,i,v){const e=W().ex.find(x=>x.id===id);if(!e)return;const k=num(v,0);e.ks=Array.from({length:e.sets},(_,j)=>j===i?k:num(kgOf(e,j),0));save();R()}
+function toast(m){let t=document.getElementById('ts');if(!t){t=document.createElement('div');t.id='ts';t.className='ts';t.setAttribute('role','status');document.body.appendChild(t)}t.innerHTML=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>{t.style.display='none'},5000)}
+function cheer(n,k,p){toast(`🎉 <b>Parabéns!</b> Nova carga em ${esc(n)}: ${fmt(k)}kg <span class="mu">(antes ${fmt(p)}kg)</span>`);chime();try{navigator.vibrate&&navigator.vibrate([100,60,100,60,200])}catch(e){}}
+function checkPR(e,i){const k=num(kgOf(e,i),0);if(!k)return;S.pr=S.pr||{};const p=S.pr[pk(e)];if(p===undefined){S.pr[pk(e)]=k;return}if(k>p){S.pr[pk(e)]=k;cheer(e.name,k,p)}}
+function delW(id){const w=S.w.find(x=>x.id===id);if(!w)return;const d=document.createElement('div');d.className='ov';d.innerHTML=`<div class="sh" role="alertdialog"><h3>Excluir “${esc(w.name)}”?</h3><p class="mu">O treino e seus exercícios serão apagados. Isso não pode ser desfeito.</p><div class="row"><button class="g" id="no">Cancelar</button><button id="yes" style="background:var(--dn);color:#fff;font-weight:700">Excluir</button></div></div>`;d.onclick=e=>{if(e.target===d)d.remove()};document.body.appendChild(d);d.querySelector('#no').onclick=()=>d.remove();d.querySelector('#yes').onclick=()=>{S.w=S.w.filter(x=>x.id!==id);if(open===id)open=null;if(S.wt&&S.wt.id===id){S.wt=null;stopRest()}save();d.remove();R()}}
 function tick(){const w=document.getElementById('wt');if(w&&S.wt&&S.wt.id===open)w.textContent=fm(el(S.wt));const b=document.getElementById('rb');if(rEnd&&b){b.style.display=open?'flex':'none';const left=rEnd-Date.now(),t=document.getElementById('rt');if(t)t.textContent=left>0?fm(left+999):'Pronto!';if(left<=0&&beeped!==rEnd){beeped=rEnd;beep()}if(left<-8000)stopRest()}}
 setInterval(tick,500);
 addEventListener('online',()=>push());
 function backup(){const d=document.createElement('div');d.className='ov';d.innerHTML=`<div class="sh"><h3>Backup</h3><p class="mu">Copie o texto abaixo e guarde (ex: no bloco de notas). Para restaurar, cole o texto aqui e toque em Restaurar.</p><textarea id="bk" style="width:100%;height:140px;background:#0b1316;color:#eef5f2;border:1px solid #2b3d43;border-radius:12px;padding:10px;font:12px monospace"></textarea><div class="row" style="margin-top:12px"><button class="g" id="cp">Copiar</button><button class="p" id="rs">Restaurar</button></div></div>`;d.onclick=e=>{if(e.target===d)d.remove()};document.body.appendChild(d);const t=d.querySelector('#bk');t.value=JSON.stringify(S);d.querySelector('#cp').onclick=()=>{t.select();try{navigator.clipboard.writeText(t.value)}catch(e){try{document.execCommand('copy')}catch(x){}}};d.querySelector('#rs').onclick=()=>{try{const r=JSON.parse(t.value);if(!r||!Array.isArray(r.w))throw 0;S=r;norm();save();d.remove();R()}catch(e){t.style.borderColor='#ff6b5e'}}}
+function useSug(){const ws=S.weights;if(!ws.length)return;S.gb=Math.min(12,Math.max(1,Math.round(ws[ws.length-1].kg*35/S.bt)));save();R()}
+function sugBox(){const ws=S.weights;if(!ws.length)return '';const n=Math.min(12,Math.max(1,Math.round(ws[ws.length-1].kg*35/S.bt)));if(n===S.gb)return '';return `<div class="card" style="margin-top:18px"><div class="mu">Sugestão para o seu peso</div><div class="big" style="font-size:26px">${n} garrafas por dia</div><button class="p" style="margin-top:10px" onclick="useSug()">Usar como meta</button></div>`}
 function go(id){open=id;R();tick();window.scrollTo(0,0)}
 function nav(k){tab=k;open=null;R();tick()}
 R();
